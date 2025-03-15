@@ -46,10 +46,19 @@ exports.addProperty = async (req, res) => {
   
 
 // Get all properties
-exports.getProperties = async (req, res) => {
+exports.getPropertyForBuyer = async (req, res) => {
   try {
-    const properties = await Property.find().populate("seller_id", "name email");
-    res.json(properties);
+    const property = await Property.findById(req.params.id).populate("subscription_required");
+    if (!property) return res.status(404).json({ message: "Property not found" });
+    
+    // If property requires a subscription, check buyer's subscription
+    if (property.subscription_required) {
+      const buyerSubscriptionId = await checkIfBuyerHasSubscription(req.user.id);
+      if (!buyerSubscriptionId || buyerSubscriptionId !== property.subscription_required._id.toString()) {
+        return res.status(403).json({ message: "Access denied. You need the required subscription to view this property." });
+      }
+    }
+    res.json(property);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
