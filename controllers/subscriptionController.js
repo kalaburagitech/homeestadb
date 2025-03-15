@@ -29,27 +29,27 @@ exports.getSubscriptions = async (req, res) => {
 
 // Buyer purchases a subscription plan
 exports.buySubscription = async (req, res) => {
-  try {
-    // Ensure only a buyer can purchase a subscription
-    if (!req.user || req.user.role !== "buyer") {
-      return res.status(403).json({ message: "Only buyers can purchase subscriptions" });
+    try {
+      // Ensure only a buyer can purchase a subscription
+      if (!req.user || req.user.role !== "buyer") {
+        return res.status(403).json({ message: "Only buyers can purchase subscriptions" });
+      }
+      const { subscription_id } = req.body;
+      const subscription = await Subscription.findById(subscription_id);
+      if (!subscription) return res.status(404).json({ message: "Subscription not found" });
+      
+      // Create a transaction - expiry_date will be set automatically to 30 days later
+      const transaction = new Transaction({
+        buyer_id: req.user.id,
+        subscription_id: subscription._id,
+        purchase_price: subscription.price,
+      });
+      await transaction.save();
+      res.status(201).json({ message: "Subscription purchased successfully", transaction });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-    const { subscription_id } = req.body;
-    const subscription = await Subscription.findById(subscription_id);
-    if (!subscription) return res.status(404).json({ message: "Subscription not found" });
-    
-    // Record the transaction
-    const transaction = new Transaction({
-      buyer_id: req.user.id,
-      subscription_id: subscription._id,
-      purchase_price: subscription.price
-    });
-    await transaction.save();
-    res.status(201).json({ message: "Subscription purchased successfully", transaction });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+  };
 
 // Check if a buyer has an active subscription (simple check via transaction)
 exports.checkSubscription = async (req, res) => {

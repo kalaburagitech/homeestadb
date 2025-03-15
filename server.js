@@ -23,7 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/sellers", sellerRoutes);
 app.use("/api/buyers", buyerRoutes);
 app.use("/api/properties", propertyRoutes);
-app.use("/api/subscriptionRoutes", subscriptionRoutes);
+app.use("/api/subscriptions", subscriptionRoutes);
 
 // Default Route
 app.get("/", (req, res) => {

@@ -2,18 +2,18 @@ const express = require("express");
 const router = express.Router();
 const {
   createSubscription,
-  getAllSubscriptions,
+  getSubscriptions,
   buySubscription,
   checkSubscription,
 } = require("../controllers/subscriptionController");
-const authMiddleware = require("../middleware/authMiddleware");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
 
 // ✅ Create Subscription (Admin only)
 router.post("/create", authMiddleware, createSubscription);
 
 // ✅ Get All Subscriptions (Public)
-router.get("/", getAllSubscriptions);
+router.get("/", getSubscriptions);
 
 // ✅ Buyer Purchases Subscription
 router.post("/buy", authMiddleware, buySubscription);
