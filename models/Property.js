@@ -27,6 +27,7 @@ const PropertySchema = new mongoose.Schema({
       alt_text: { type: String },
     },
   ],
+  subscription_required: { type: mongoose.Schema.Types.ObjectId, ref: "Subscription", default: null },
   created_at: { type: Date, default: Date.now },
 });
 

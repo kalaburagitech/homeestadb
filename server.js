@@ -5,9 +5,10 @@ const connectDB = require("./config/db");
 
 // Import Routes
 const authRoutes = require("./routes/authRoutes");
-// const sellerRoutes = require("./routes/sellerRoutes");
-// const buyerRoutes = require("./routes/buyerRoutes");
+const sellerRoutes = require("./routes/sellerRoutes");
+const buyerRoutes = require("./routes/buyerRoutes");
 const propertyRoutes = require("./routes/propertyRoutes");
+const subscriptionRoutes = require("./routes/subscriptionRoutes");
 
 // Initialize Express App
 const app = express();
@@ -19,9 +20,10 @@ app.use(cors());
 
 // Routes
 app.use("/api/auth", authRoutes);
-// app.use("/api/sellers", sellerRoutes);
-// app.use("/api/buyers", buyerRoutes);
+app.use("/api/sellers", sellerRoutes);
+app.use("/api/buyers", buyerRoutes);
 app.use("/api/properties", propertyRoutes);
+app.use("/api/subscriptionRoutes", subscriptionRoutes);
 
 // Default Route
 app.get("/", (req, res) => {

@@ -7,7 +7,7 @@ const { authMiddleware, sellerAuth } = require("../middleware/authMiddleware");
 router.post("/", authMiddleware, sellerAuth, addProperty);
 router.get("/", getProperties);
 router.get("/:id", getPropertyById);
-router.put("/:id", updateProperty);
+router.put("/:id", authMiddleware, updateProperty);
 router.delete("/:id", deleteProperty);
 
 module.exports = router;
