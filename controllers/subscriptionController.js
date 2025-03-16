@@ -45,7 +45,15 @@ exports.buySubscription = async (req, res) => {
         purchase_price: subscription.price,
       });
       await transaction.save();
-      res.status(201).json({ message: "Subscription purchased successfully", transaction });
+
+        // Update the Buyer record with the subscription id
+    const updatedBuyer = await Buyer.findOneAndUpdate(
+        { user_id: req.user.id },
+        { subscription_plan: subscription._id },
+        { new: true }
+      );
+
+      res.status(201).json({ message: "Subscription purchased successfully", transaction,  buyer: updatedBuyer  });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
