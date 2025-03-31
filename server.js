@@ -3,6 +3,10 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
+// Swagger
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
 // Import Routes
 const authRoutes = require("./routes/authRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
@@ -17,6 +21,22 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(cors());
+
+// Swagger Documentation Setup
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "HomeEsta Real Estate API",
+      version: "1.0.0",
+      description: "API documentation for HomeEsta Real Estate platform",
+    },
+    basePath: "/api", // This will be the base path for your API routes
+  },
+  apis: ["./routes/*.js"], // Pointing to the location of your route files
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Routes
 app.use("/api/auth", authRoutes);
